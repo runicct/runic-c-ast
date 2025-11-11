@@ -42,17 +42,25 @@ namespace Runic.C
             public Runic.AST.Node GetBreakOrContinueNode() { return new Node.Empty(); }
             public AST.Function GetFunction(Parser.Function func)
             {
+#if NET6_0_OR_GREATER
                 AST.Function? function;
+#else
+                AST.Function function;
+#endif
                 if (func.Name.Value == null) { return null; }
                 if (!_functions.TryGetValue(func.Name.Value, out function))
                 {
-                    throw new Exception($"Function '{func.Name.Value}' not found.");
+                    throw new Exception("Function '" + func.Name.Value + "' not found.");
                 }
                 return function;
             }
             uint _nextGlobalVariableIndex = 0;
             Dictionary<ulong, Runic.AST.Variable.GlobalVariable> _globalVariables = new Dictionary<ulong, Runic.AST.Variable.GlobalVariable>();
+#if NET6_0_OR_GREATER
             public Runic.AST.Variable? GetVariable(Parser.Variable variable)
+#else
+            public Runic.AST.Variable GetVariable(Parser.Variable variable)
+#endif
             {
                 switch (variable)
                 {
@@ -71,7 +79,11 @@ namespace Runic.C
                 }
                 return null;
             }
+#if NET6_0_OR_GREATER
             public Runic.AST.Node.Label? GetLabel(Parser.Label label)
+#else
+            public Runic.AST.Node.Label GetLabel(Parser.Label label)
+#endif
             {
                 return null;
             }

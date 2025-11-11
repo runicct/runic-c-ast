@@ -33,7 +33,11 @@ namespace Runic.C
 {
     public partial class AST : Runic.AST.INodeStream
     {
+#if NET6_0_OR_GREATER
         Runic.AST.Node.Expression.Constant BuildCharConstant(AST parent, Runic.AST.Type? hint, Parser.Expression.Constant constant)
+#else
+        Runic.AST.Node.Expression.Constant BuildCharConstant(AST parent, Runic.AST.Type hint, Parser.Expression.Constant constant)
+#endif
         {
             Runic.AST.Type.CharEncoding encoding = Runic.AST.Type.CharEncoding.UTF8;
             string literal = LiteralParser.ParseLiteralChar(parent.WCharEncoding, constant.Tokens, out encoding);
@@ -94,7 +98,11 @@ namespace Runic.C
             {
                 return new Runic.AST.Node.Expression.Constant.Null();
             }
+#if NET6_0_OR_GREATER
             string? firstTokenValue = constant.Tokens[0].Value;
+#else
+            string firstTokenValue = constant.Tokens[0].Value;
+#endif
             if (firstTokenValue != null && firstTokenValue.Length > 0)
             {
                 if (firstTokenValue[0] == '\'') { return BuildCharConstant(parent, type, constant); }

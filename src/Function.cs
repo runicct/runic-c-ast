@@ -35,8 +35,13 @@ namespace Runic.C
         {
             AST _parent;
             ICScope _parentScope;
+#if NET6_0_OR_GREATER
             Runic.AST.Node[]? _body = null;
             public override Runic.AST.Node[]? Body { get { return _body; } }
+#else
+            Runic.AST.Node[] _body = null;
+            public override Runic.AST.Node[] Body { get { return _body; } }
+#endif
             string _name;
             public  string Name { get { return _name; } }
             Runic.AST.Variable.FunctionParameter[] _parameters;
@@ -59,7 +64,11 @@ namespace Runic.C
                 return result;
             }
             Dictionary<ulong, Runic.AST.Variable.LocalVariable> _localVariables = new Dictionary<ulong, Runic.AST.Variable.LocalVariable>();
+#if NET6_0_OR_GREATER
             public Runic.AST.Variable? GetVariable(Parser.Variable variable)
+#else
+            public Runic.AST.Variable GetVariable(Parser.Variable variable)
+#endif
             {
                 switch (variable)
                 {
@@ -126,10 +135,18 @@ namespace Runic.C
                 List<Runic.AST.Node> body = new List<Runic.AST.Node>();
                 while (true)
                 {
+#if NET6_0_OR_GREATER
                     Runic.Statement? statement = Parent.ReadNextStatement();
+#else
+                    Runic.Statement statement = Parent.ReadNextStatement();
+#endif
                     if (statement == null) { break; }
                     if (statement is Parser.Scope.ExitFunctionDefinition) { break; }
+#if NET6_0_OR_GREATER
                     Runic.AST.Node? node = Parent.ReadNextNode(this, statement);
+#else
+                    Runic.AST.Node node = Parent.ReadNextNode(this, statement);
+#endif
                     if (node == null) { break; }
                     do
                     {

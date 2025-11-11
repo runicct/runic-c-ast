@@ -29,7 +29,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Runic.C
 {
@@ -41,8 +40,13 @@ namespace Runic.C
             public Runic.AST.Node.Label RestartLabel { get { return _restartLabel; } }
             Runic.AST.Node.Label _endLabel;
             public Runic.AST.Node.Label EndLabel { get { return _endLabel; } }
+#if NET6_0_OR_GREATER
             Runic.AST.Node[]? _body = null;
             public override Runic.AST.Node[]? Body { get { return _body; } }
+#else
+            Runic.AST.Node[] _body = null;
+            public override Runic.AST.Node[] Body { get { return _body; } }
+#endif
             ICScope _parentScope;
             Runic.Statement _statement;
             public Runic.Statement Statement { get { return _statement; } }
@@ -72,15 +76,27 @@ namespace Runic.C
                 List<Node> body = new List<Node>();
                 while (true)
                 {
+#if NET6_0_OR_GREATER
                     Runic.Statement? statement = parent.ReadNextStatement();
+#else
+                    Runic.Statement statement = parent.ReadNextStatement();
+#endif
                     if (statement == null) { break; }
+#if NET6_0_OR_GREATER
                     Parser.Scope.ExitDoWhile? exit = statement as Parser.Scope.ExitDoWhile;
+#else
+                    Parser.Scope.ExitDoWhile exit = statement as Parser.Scope.ExitDoWhile;
+#endif
                     if (exit != null)
                     {
                         _condition = parent.BuildExpression(parent, _parentScope, null, exit.Condition);
                         break;
                     }
+#if NET6_0_OR_GREATER
                     Node? node = parent.ReadNextNode(this, statement);
+#else
+                    Node node = parent.ReadNextNode(this, statement);
+#endif
                     if (node == null) { break; }
                     body.Add(node);
                 }
@@ -90,13 +106,26 @@ namespace Runic.C
 
             internal void BuildUnscoped(AST parent)
             {
+#if NET6_0_OR_GREATER
                 Runic.Statement? statement = parent.ReadNextStatement();
                 Node? body = parent.ReadNextNode(this, statement);
+#else
+                Runic.Statement statement = parent.ReadNextStatement();
+                Node body = parent.ReadNextNode(this, statement);
+#endif
                 if (body == null) { _body = new Node[1] { _restartLabel }; }
                 else { _body = new Node[2] { body, _restartLabel }; }
+#if NET6_0_OR_GREATER
                 Runic.Statement? emptyWhileCandidate = parent.ReadNextStatement();
+#else
+                Runic.Statement emptyWhileCandidate = parent.ReadNextStatement();
+#endif
                 if (emptyWhileCandidate == null) { parent.Error_ExpectedWhileAfterDo(_statement as Parser.UnscopedDo, emptyWhileCandidate); }
+#if NET6_0_OR_GREATER
                 Parser.EmptyWhile? emptyWhile = emptyWhileCandidate as Parser.EmptyWhile;
+#else
+                Parser.EmptyWhile emptyWhile = emptyWhileCandidate as Parser.EmptyWhile;
+#endif
                 if (emptyWhile == null) { parent.Error_ExpectedWhileAfterDo(_statement as Parser.UnscopedDo, emptyWhileCandidate); }
                 _condition = parent.BuildExpression(parent, _parentScope, null, emptyWhile.Condition);
             }

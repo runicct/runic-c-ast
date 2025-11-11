@@ -57,7 +57,11 @@ namespace Runic.C
             Equal,
             NotEqual
         }
+#if NET6_0_OR_GREATER
         Runic.AST.Node.Expression BuildOperator(BinaryOperator operatorType, AST ast, ICScope parent, Runic.AST.Type? type, Parser.Expression left, Token op, Parser.Expression right)
+#else
+        Runic.AST.Node.Expression BuildOperator(BinaryOperator operatorType, AST ast, ICScope parent, Runic.AST.Type type, Parser.Expression left, Token op, Parser.Expression right)
+#endif
         {
             Runic.AST.Node.Expression leftExpr = BuildExpression(ast, parent, type, left);
             Runic.AST.Node.Expression rightExpr = BuildExpression(ast, parent, leftExpr.Type, right);
@@ -126,7 +130,11 @@ namespace Runic.C
             }
             throw new Exception("Invalid binary operator " + operatorType.ToString());
         }
+#if NET6_0_OR_GREATER
         Runic.AST.Node.Expression BuildExpression(AST ast, ICScope parent, Runic.AST.Type? type, Parser.Expression expression)
+#else
+        Runic.AST.Node.Expression BuildExpression(AST ast, ICScope parent, Runic.AST.Type type, Parser.Expression expression)
+#endif
         {
             if (expression == null) { return null; }
             switch (expression)
@@ -136,7 +144,11 @@ namespace Runic.C
                     {
                         Runic.AST.Type.StructOrUnion.Field[] fields = new Runic.AST.Type.StructOrUnion.Field[memberUse.Fields.Length];
                         Runic.AST.Variable variable = parent.GetVariable(memberUse.Variable);
+#if NET6_0_OR_GREATER
                         Runic.AST.Type.StructOrUnion? previousType = variable.Type as Runic.AST.Type.StructOrUnion;
+#else
+                        Runic.AST.Type.StructOrUnion previousType = variable.Type as Runic.AST.Type.StructOrUnion;
+#endif
                         for (int n = 0; n < memberUse.Fields.Length; n++)
                         {
                             if (previousType == null)
@@ -161,7 +173,11 @@ namespace Runic.C
                     {
                         Runic.AST.Type.StructOrUnion.Field[] fields = new Runic.AST.Type.StructOrUnion.Field[assignment.Fields.Length];
                         Runic.AST.Variable target = parent.GetVariable(assignment.Target);
+#if NET6_0_OR_GREATER
                         Runic.AST.Type.StructOrUnion? previousType = target.Type as Runic.AST.Type.StructOrUnion;
+#else
+                        Runic.AST.Type.StructOrUnion previousType = target.Type as Runic.AST.Type.StructOrUnion;
+#endif
                         for (int n = 0; n < assignment.Fields.Length; n++)
                         {
                             if (previousType == null)
@@ -206,7 +222,11 @@ namespace Runic.C
                 case Parser.Expression.IndirectCall indirectCall:
                     {
                         Runic.AST.Node.Expression function = BuildExpression(ast, parent, type, indirectCall.Function);
+#if NET6_0_OR_GREATER
                         Runic.AST.Type.FunctionPointer? functionPointer = function.Type as Runic.AST.Type.FunctionPointer;
+#else
+                        Runic.AST.Type.FunctionPointer functionPointer = function.Type as Runic.AST.Type.FunctionPointer;
+#endif
                         Runic.AST.Node.Expression[] parameters = new Runic.AST.Node.Expression[indirectCall.Parameters.Length];
                         for (int n = 0; n < indirectCall.Parameters.Length; n++)
                         {
@@ -248,7 +268,11 @@ namespace Runic.C
                     {
                         Runic.AST.Variable variable = parent.GetVariable(memberReference.Variable);
                         Runic.AST.Type.StructOrUnion.Field[] fields = new Runic.AST.Type.StructOrUnion.Field[memberReference.Fields.Length];
+#if NET6_0_OR_GREATER
                         Runic.AST.Type.StructOrUnion? previousType = variable.Type as Runic.AST.Type.StructOrUnion;
+#else
+                        Runic.AST.Type.StructOrUnion previousType = variable.Type as Runic.AST.Type.StructOrUnion;
+#endif
 
                         for (int n = 0; n < memberReference.Fields.Length; n++)
                         {

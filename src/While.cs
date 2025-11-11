@@ -41,8 +41,13 @@ namespace Runic.C
             Runic.AST.Node.Label _endLabel;
             public Runic.AST.Node.Label EndLabel { get { return _endLabel; } }
             ICScope _parentScope;
+#if NET6_0_OR_GREATER
             Runic.AST.Node[]? _body = null;
             public override Runic.AST.Node[]? Body { get { return _body; } }
+#else
+            Runic.AST.Node[] _body = null;
+            public override Runic.AST.Node[] Body { get { return _body; } }
+#endif
             Runic.Statement _statement;
             public Runic.Statement Statement { get { return _statement; } }
             public Runic.AST.Node GetBreakOrContinueNode() { return this; }
@@ -77,10 +82,18 @@ namespace Runic.C
                 List<Node> body = new List<Node>();
                 while (true)
                 {
+#if NET6_0_OR_GREATER
                     Runic.Statement? statement = Parent.ReadNextStatement();
+#else
+                    Runic.Statement statement = Parent.ReadNextStatement();
+#endif
                     if (statement == null) { break; }
                     if (statement is Parser.Scope.ExitWhile) { break; }
+#if NET6_0_OR_GREATER
                     Node? node = Parent.ReadNextNode(this, statement);
+#else
+                    Node node = Parent.ReadNextNode(this, statement);
+#endif
                     if (node == null) { break; }
                     body.Add(node);
                 }
@@ -89,8 +102,13 @@ namespace Runic.C
             }
             internal void BuildUnscoped(AST Parent)
             {
+#if NET6_0_OR_GREATER
                 Runic.Statement? statement = Parent.ReadNextStatement();
                 Node? body = Parent.ReadNextNode(this, statement);
+#else
+                Runic.Statement statement = Parent.ReadNextStatement();
+                Node body = Parent.ReadNextNode(this, statement);
+#endif
                 if (body == null) { _body = new Node[1] { _restartLabel }; }
                 else { _body = new Node[2] { body, _restartLabel }; }
 

@@ -24,6 +24,7 @@
 
 using Runic.AST;
 using static Runic.C.Parser;
+using System.Collections.Generic;
 
 namespace Runic.C
 {
@@ -40,17 +41,27 @@ namespace Runic.C
             {
                 _input = input;
             }
-
+#if NET6_0_OR_GREATER
             public Statement? ReadNextStatement()
+#else
+            public Statement ReadNextStatement()
+#endif
             {
                 if (_queue.Count > 0) { return _queue.Dequeue(); }
                 return _input.ReadNextStatement();
             }
-
+#if NET6_0_OR_GREATER
             public Statement? PeekNextStatement()
+#else
+            public Statement PeekNextStatement()
+#endif
             {
                 if (_queue.Count > 0) { return _queue.Peek(); }
+#if NET6_0_OR_GREATER
                 Statement? statement = _input.ReadNextStatement();
+#else
+                Statement statement = _input.ReadNextStatement();
+#endif
                 if (statement == null) { return null; }
                 _queue.Enqueue(statement);
                 return statement;
@@ -67,14 +78,21 @@ namespace Runic.C
             _rootNode = new Root(this);
             _input = new StatementQueue(StatementStream);
         }
-
+#if NET6_0_OR_GREATER
         internal Statement? ReadNextStatement()
+#else
+        internal Statement ReadNextStatement()
+#endif
         {
             return _input.ReadNextStatement();
         }
 
         Queue<Node> _nodeQueue = new Queue<Node>();
+#if NET6_0_OR_GREATER
         internal Node? DequeuePendingNode()
+#else
+        internal Node DequeuePendingNode()
+#endif
         {
             if (_nodeQueue.Count > 0)
             {
@@ -132,13 +150,21 @@ namespace Runic.C
             }
             return null;
         }
+#if NET6_0_OR_GREATER
         internal Node? ReadNextNode(ICScope parent, Runic.Statement? initialStatement)
+#else
+        internal Node ReadNextNode(ICScope parent, Runic.Statement initialStatement)
+#endif
         {
             if (_nodeQueue.Count > 0)
             {
                 return _nodeQueue.Dequeue();
             }
+#if NET6_0_OR_GREATER
             Runic.Statement? statement = initialStatement;
+#else
+            Runic.Statement statement = initialStatement;
+#endif
             if (statement == null)
             {
                 statement = _input.ReadNextStatement();
@@ -157,7 +183,11 @@ namespace Runic.C
                 case Parser.Expression expression: return BuildExpression(this, parent, null, expression);
                 case Parser.FunctionDefinition functionDefinition:
                     {
+#if NET6_0_OR_GREATER
                         Function? function = null;
+#else
+                        Function function = null;
+#endif
                         if (_rootNode.TryGetFunction(functionDefinition.Name.Value, out function))
                         {
                             if (function == null)
@@ -206,7 +236,11 @@ namespace Runic.C
                         If nodeIf = new If(this, parent, _if);
                         nodeIf.Build(this);
                         // Check for an else
+#if NET6_0_OR_GREATER
                         Statement? maybeElse = _input.PeekNextStatement();
+#else
+                        Statement maybeElse = _input.PeekNextStatement();
+#endif
                         if (maybeElse == null) { return nodeIf; }
                         switch (maybeElse)
                         {
@@ -226,7 +260,11 @@ namespace Runic.C
                         If nodeIf = new If(this, parent, _if);
                         nodeIf.BuildUnscoped(this);
                         // Check for an else
+#if NET6_0_OR_GREATER
                         Statement? maybeElse = _input.PeekNextStatement();
+#else
+                        Statement maybeElse = _input.PeekNextStatement();
+#endif
                         if (maybeElse == null) { return nodeIf; }
                         switch (maybeElse)
                         {
@@ -365,11 +403,19 @@ namespace Runic.C
             statement = _input.ReadNextStatement();
             goto restart;
         }
+#if NET6_0_OR_GREATER
         internal Node? ReadNextNode(Runic.Statement? initialStatement)
+#else
+        internal Node ReadNextNode(Runic.Statement initialStatement)
+#endif
         {
             return ReadNextNode(_rootNode, initialStatement);
         }
+#if NET6_0_OR_GREATER
         public Node? ReadNextNode()
+#else
+        public Node ReadNextNode()
+#endif
         {
             return ReadNextNode(null);
         }

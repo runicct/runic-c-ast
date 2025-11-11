@@ -72,21 +72,33 @@ namespace Runic.C
                     _case = new Runic.AST.Node.Switch.Case(value, new Label(parent.GetParentFunction()));
                     _endLabel = new Runic.AST.Node.Label(parent.GetParentFunction());
                 }
+#if NET6_0_OR_GREATER
                 public Runic.AST.Node? Build(AST parent, out bool exitSwitch)
+#else
+                public Runic.AST.Node Build(AST parent, out bool exitSwitch)
+#endif
                 {
                     exitSwitch = false;
                     List<Node> body = new List<Node>();
                     body.Add(_case.Label);
                     while (true)
                     {
+#if NET6_0_OR_GREATER
                         Runic.Statement? statement = parent.ReadNextStatement();
+#else
+                        Runic.Statement statement = parent.ReadNextStatement();
+#endif
                         if (statement == null) { break; }
                         if (statement is Parser.Scope.ExitSwitch)
                         {
                             exitSwitch = true;
                             break;
                         }
+#if NET6_0_OR_GREATER
                         Node? node = parent.ReadNextNode(this, statement);
+#else
+                        Node node = parent.ReadNextNode(this, statement);
+#endif
                         if (node == null) { break; }
 
                         switch (node)
@@ -126,21 +138,33 @@ namespace Runic.C
                     _defaultLabel = new Runic.AST.Node.Label(parent.GetParentFunction());
                     _endLabel = new Runic.AST.Node.Label(parent.GetParentFunction());
                 }
+#if NET6_0_OR_GREATER
                 public Runic.AST.Node? Build(AST parent, out bool exitSwitch)
+#else
+                public Runic.AST.Node Build(AST parent, out bool exitSwitch)
+#endif
                 {
                     exitSwitch = false;
                     List<Node> body = new List<Node>();
                     body.Add(_defaultLabel);
                     while (true)
                     {
+#if NET6_0_OR_GREATER
                         Runic.Statement? statement = parent.ReadNextStatement();
+#else
+                        Runic.Statement statement = parent.ReadNextStatement();
+#endif
                         if (statement == null) { break; }
                         if (statement is Parser.Scope.ExitSwitch)
                         {
                             exitSwitch = true;
                             break; 
                         }
+#if NET6_0_OR_GREATER
                         Node? node = parent.ReadNextNode(this, statement);
+#else
+                        Node node = parent.ReadNextNode(this, statement);
+#endif
                         if (node == null) { break; }
                         switch (node)
                         {
@@ -160,8 +184,13 @@ namespace Runic.C
 
             ICScope _parentScope;
             Runic.AST.Node.Expression _value;
+#if NET6_0_OR_GREATER
             Runic.AST.Node[]? _body = null;
             public Runic.AST.Node[]? Body { get { return _body; } }
+#else
+            Runic.AST.Node[] _body = null;
+            public Runic.AST.Node[] Body { get { return _body; } }
+#endif
             Label _default;
             Label _endLabel;
             public Label EndLabel { get { return _endLabel; } }
@@ -185,14 +214,27 @@ namespace Runic.C
                 List<Runic.AST.Node> result = new List<Runic.AST.Node>();
 
                 List<Runic.AST.Node.Switch.Case> cases = new List<Runic.AST.Node.Switch.Case>();
+#if NET6_0_OR_GREATER
                 Runic.AST.Node? nextNode = null;
                 C.AST.Switch.Default? @default = null;
+#else
+                Runic.AST.Node nextNode = null;
+                C.AST.Switch.Default @default = null;
+#endif
                 while (true)
                 {
+#if NET6_0_OR_GREATER
                     Runic.Statement? statement = parent.ReadNextStatement();
+#else
+                    Runic.Statement statement = parent.ReadNextStatement();
+#endif
                     if (statement == null) { break; }
                     if (statement is Parser.Scope.ExitSwitch) { break; }
+#if NET6_0_OR_GREATER
                     Node? node = parent.ReadNextNode(this, statement);
+#else
+                    Node node = parent.ReadNextNode(this, statement);
+#endif
                     if (node == null) { break; }
                     bool exitSwitch = false;
                     while (node != null)

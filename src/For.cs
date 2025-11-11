@@ -41,8 +41,13 @@ namespace Runic.C
             Runic.AST.Node.Label _endLabel;
             public Runic.AST.Node.Label EndLabel { get { return _endLabel; } }
             ICScope _parentScope;
+#if NET6_0_OR_GREATER
             Runic.AST.Node[]? _body = null;
             public override Runic.AST.Node[]? Body { get { return _body; } }
+#else
+            Runic.AST.Node[] _body = null;
+            public override Runic.AST.Node[] Body { get { return _body; } }
+#endif
             public Runic.AST.Node GetBreakOrContinueNode() { return this; }
             public AST.Function GetFunction(Parser.Function function) { return _parentScope.GetFunction(function); }
             public Runic.AST.Node.Label GetLabel(Parser.Label label) { return _parentScope.GetLabel(label); }
@@ -60,10 +65,18 @@ namespace Runic.C
                 List<Node> body = new List<Node>();
                 while (true)
                 {
+#if NET6_0_OR_GREATER
                     Runic.Statement? statement = Parent.ReadNextStatement();
+#else
+                    Runic.Statement statement = Parent.ReadNextStatement();
+#endif
                     if (statement == null) { break; }
                     if (statement is Parser.Scope.ExitFor) { break; }
+#if NET6_0_OR_GREATER
                     Node? node = Parent.ReadNextNode(this, statement);
+#else
+                    Node node = Parent.ReadNextNode(this, statement);
+#endif
                     if (node == null) { break; }
                     body.Add(node);
                 }

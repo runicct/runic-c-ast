@@ -120,7 +120,11 @@ namespace Runic.C
                 for (int n = 0; n < tokens.Length; n++)
                 {
                     Runic.Token token = tokens[n];
+#if NET6_0_OR_GREATER
                     string? tokenValue = token.Value;
+#else
+                    string tokenValue = token.Value;
+#endif
                     if (tokenValue != null && tokenValue.Length > 0)
                     {
                         Runic.AST.Type.CharEncoding segmentEncoding = Runic.AST.Type.CharEncoding.UTF8;
@@ -137,7 +141,11 @@ namespace Runic.C
                 if (tokens.Length == 0) { return ""; }
                 StringBuilder result = new StringBuilder();
                 Runic.Token token = tokens[0];
+#if NET6_0_OR_GREATER
                 string? tokenValue = token.Value;
+#else
+                string tokenValue = token.Value;
+#endif
                 if (tokenValue != null && tokenValue.Length > 0)
                 {
                     Runic.AST.Type.CharEncoding segmentEncoding = Runic.AST.Type.CharEncoding.UTF8;

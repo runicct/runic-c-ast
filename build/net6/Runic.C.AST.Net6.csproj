@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>Runic.C.AST</AssemblyName>
+    <RootNamespace>Runic.C.AST</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\src\AST.cs" Link="AST.cs" />
+    <Compile Include="..\..\src\Constant.cs" Link="Constant.cs" />
+    <Compile Include="..\..\src\CStruct.cs" Link="CStruct.cs" />
+    <Compile Include="..\..\src\DoWhile.cs" Link="DoWhile.cs" />
+    <Compile Include="..\..\src\Expression.cs" Link="Expression.cs" />
+    <Compile Include="..\..\src\For.cs" Link="For.cs" />
+    <Compile Include="..\..\src\Function.cs" Link="Function.cs" />
+    <Compile Include="..\..\src\GenericScope.cs" Link="GenericScope.cs" />
+    <Compile Include="..\..\src\ICScope.cs" Link="ICScope.cs" />
+    <Compile Include="..\..\src\If.cs" Link="If.cs" />
+    <Compile Include="..\..\src\LiteralParser.cs" Link="LiteralParser.cs" />
+    <Compile Include="..\..\src\Root.cs" Link="Root.cs" />
+    <Compile Include="..\..\src\Switch.cs" Link="Switch.cs" />
+    <Compile Include="..\..\src\Type.cs" Link="Type.cs" />
+    <Compile Include="..\..\src\While.cs" Link="While.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Runic.AST" Version="1.0.5" />
+    <PackageReference Include="Runic.C.Parser" Version="1.0.4" />
+  </ItemGroup>
+</Project>
