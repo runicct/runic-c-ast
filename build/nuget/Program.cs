@@ -39,7 +39,7 @@ static string CreateNuspec(string packageId, string version, string description,
     stringBuilder.AppendLine("    <authors>runicct</authors>");
     stringBuilder.AppendLine("    <owners>runicct</owners>");
     stringBuilder.AppendLine("    <description>" + description + "</description>");
-    stringBuilder.AppendLine("    <projectUrl>https://github.com/runicct/runic-cil-fromast</projectUrl>");
+    stringBuilder.AppendLine("    <projectUrl>https://github.com/runicct/runic-c-ast</projectUrl>");
     stringBuilder.AppendLine("    <language>en-US</language>");
     stringBuilder.AppendLine("    <tags>runic runicct compiler construction toolkit " + tags + "</tags>");
     stringBuilder.AppendLine("    <license type=\"expression\">MIT</license>");
