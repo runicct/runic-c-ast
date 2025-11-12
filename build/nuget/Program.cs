@@ -77,7 +77,7 @@ using (var fileStream = new FileStream(nupkgPath, FileMode.Create, FileAccess.Re
         var entry = zip.CreateEntry("Runic.C.AST.nuspec", CompressionLevel.Optimal);
         using (var stream = entry.Open())
         {
-            var bytes = System.Text.Encoding.UTF8.GetBytes(CreateNuspec("Runic.CIL.FromAST", version, "This package is part of Runic Compiler Toolkit and provides a way to convert an AST into CIL bytecode", "cil ast emitter bytecode"));
+            var bytes = System.Text.Encoding.UTF8.GetBytes(CreateNuspec("Runic.C.AST", version, "This package is part of Runic Compiler Toolkit and provides a way to convert the output of the Runic.C.Parser into a generic AST", "c ast emitter convert"));
             stream.Write(bytes, 0, bytes.Length);
         }
         entry = zip.CreateEntry("lib/net48/Runic.C.AST.dll", CompressionLevel.Optimal);
