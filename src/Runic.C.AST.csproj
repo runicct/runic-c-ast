@@ -10,6 +10,6 @@
 
   <ItemGroup>
     <PackageReference Include="Runic.C.Parser" Version="1.0.4" />
-    <PackageReference Include="Runic.AST" Version="1.0.5" />
+    <PackageReference Include="Runic.AST" Version="1.0.6" />
   </ItemGroup>
 </Project>

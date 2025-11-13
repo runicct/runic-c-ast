@@ -42,8 +42,6 @@ namespace Runic.C
             Runic.AST.Node[] _body = null;
             public override Runic.AST.Node[] Body { get { return _body; } }
 #endif
-            string _name;
-            public  string Name { get { return _name; } }
             Runic.AST.Variable.FunctionParameter[] _parameters;
             public override Runic.AST.Variable.FunctionParameter[] Parameters { get { return _parameters; } }
             Runic.AST.Type _returnType;
@@ -105,11 +103,10 @@ namespace Runic.C
             {
                 _isDeclaration = false;
             }
-            internal Function(AST parent, ICScope parentScope, Parser.FunctionDefinition statement) : base()
+            internal Function(AST parent, ICScope parentScope, Parser.FunctionDefinition statement) : base(statement.Name.StartLine, statement.Name.StartColumn, statement.Name.EndLine, statement.Name.EndColumn, statement.Name.File, statement.Name.Value)
             {
                 _parentScope = parentScope;
                 _parent = parent;
-                _name = statement.Name.Value;
                 _parameters = new Runic.AST.Variable.FunctionParameter[statement.FunctionParameters.Length];
                 _returnType = parent.GetType(statement.ReturnType);
                 for (int n = 0; n < statement.FunctionParameters.Length; n++)
@@ -117,11 +114,10 @@ namespace Runic.C
                     _parameters[n] = new Runic.AST.Variable.FunctionParameter(this, parent.GetType(statement.FunctionParameters[n].VariableType));
                 }
             }
-            internal Function(AST parent, ICScope parentScope, Parser.FunctionDeclaration statement) : base()
+            internal Function(AST parent, ICScope parentScope, Parser.FunctionDeclaration statement) : base(statement.Name.StartLine, statement.Name.StartColumn, statement.Name.EndLine, statement.Name.EndColumn, statement.Name.File, statement.Name.Value)
             {
                 _parentScope = parentScope;
                 _parent = parent;
-                _name = statement.Name.Value;
                 _parameters = new Runic.AST.Variable.FunctionParameter[statement.FunctionParameters.Length];
                 _returnType = parent.GetType(statement.ReturnType);
                 for (int n = 0; n < statement.FunctionParameters.Length; n++)
