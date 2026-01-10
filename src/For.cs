@@ -53,9 +53,38 @@ namespace Runic.C
             public Runic.AST.Node.Label GetLabel(Parser.Label label) { return _parentScope.GetLabel(label); }
             public Runic.AST.Variable GetVariable(Parser.Variable variable) { return _parentScope.GetVariable(variable); }
             public AST.Function GetParentFunction() { return _parentScope.GetParentFunction(); }
-            internal For(AST parent, ICScope parentScope, Parser.For Statement) : base(Statement.Initialization == null ? null : parent.BuildExpression(parent, parentScope, null, Statement.Initialization),
-                                                                                       Statement.Condition == null ? null : parent.BuildExpression(parent, parentScope, null, Statement.Condition),
-                                                                                       Statement.Increment == null ? null : parent.BuildExpression(parent, parentScope, null, Statement.Increment))
+
+            static Runic.AST.Node.Expression BuildSequenceFromList(int offset, List<Node.Expression> nodes)
+            {
+                int length = nodes.Count - offset;
+                if (length == 0) { return null; }
+                if (length == 1) { return nodes[offset]; }
+                Runic.AST.Node.Expression.Sequence sequence = new Runic.AST.Node.Expression.Sequence(nodes[offset], BuildSequenceFromList(offset + 1, nodes));
+                return sequence;
+            }
+
+#if NET6_0_OR_GREATER
+            static Runic.AST.Node.Expression? BuildInitialization(AST parent, ICScope parentScope, Parser.For statement)
+#else
+            static Runic.AST.Node.Expression BuildInitialization(AST parent, ICScope parentScope, Parser.For statement)
+#endif
+            {
+                List<Node.Expression> initializations = new List<Node.Expression>();
+                foreach (Runic.C.Parser.VariableDeclaration variableDeclaration in statement.VariableDeclarations)
+                {
+                    if (variableDeclaration.Initialization != null)
+                    {
+                        initializations.Add(new Runic.AST.Node.Expression.VariableAssignment(parentScope.GetVariable(variableDeclaration.Variable), parent.BuildExpression(parent, parentScope, null, variableDeclaration.Initialization)));
+                    }
+                }
+                if (statement.Initialization != null) { initializations.Add(parent.BuildExpression(parent, parentScope, null, statement.Initialization)); }
+                if (initializations.Count == 0) { return null; }
+                if (initializations.Count == 1) { return initializations[0]; }
+                return BuildSequenceFromList(0, initializations);
+            }
+            internal For(AST parent, ICScope parentScope, Parser.For statement) : base(BuildInitialization(parent, parentScope, statement),
+                                                                                       statement.Condition == null ? null : parent.BuildExpression(parent, parentScope, null, statement.Condition),
+                                                                                       statement.Increment == null ? null : parent.BuildExpression(parent, parentScope, null, statement.Increment))
             {
                 _endLabel = new Runic.AST.Node.Label(parentScope.GetParentFunction());
                 _restartLabel = new Runic.AST.Node.Label(parentScope.GetParentFunction());
