@@ -86,6 +86,7 @@ namespace Runic.C
                                                                                        statement.Condition == null ? null : parent.BuildExpression(parent, parentScope, null, statement.Condition),
                                                                                        statement.Increment == null ? null : parent.BuildExpression(parent, parentScope, null, statement.Increment))
             {
+                _parentScope = parentScope;
                 _endLabel = new Runic.AST.Node.Label(parentScope.GetParentFunction());
                 _restartLabel = new Runic.AST.Node.Label(parentScope.GetParentFunction());
             }
