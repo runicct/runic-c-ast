@@ -46,7 +46,7 @@ static string CreateNuspec(string packageId, string version, string description,
     stringBuilder.AppendLine("    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>");
     stringBuilder.AppendLine("    <dependencies>");
     stringBuilder.AppendLine("        <dependency id=\"Runic.AST\" version=\"[1.0.6,)\" />");
-    stringBuilder.AppendLine("        <dependency id=\"Runic.C.Parser\" version=\"[1.0.4,)\" />");
+    stringBuilder.AppendLine("        <dependency id=\"Runic.C.Parser\" version=\"[1.0.5,)\" />");
     stringBuilder.AppendLine("    </dependencies>");
     stringBuilder.AppendLine("    <icon>runic_logo.png</icon>");
     stringBuilder.AppendLine("  </metadata>");

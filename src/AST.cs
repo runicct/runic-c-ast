@@ -395,6 +395,9 @@ namespace Runic.C
                         return new Switch.IntermediateCase(this, parent, @case);
                 case Parser.Default @default:
                     return new Switch.IntermediateDefault(this, parent, @default);
+                case Parser.Goto @goto:
+                    if (@goto.Label == null) { return new Runic.AST.Node.Empty(); }
+                    return new Runic.AST.Node.Branch(parent.GetLabel(@goto.Label));
                 case Parser.Label label:
                     return parent.GetLabel(label);
                 case Parser.Empty empty:
