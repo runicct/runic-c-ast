@@ -146,9 +146,18 @@ namespace Runic.C
                         Runic.AST.Variable variable = parent.GetVariable(memberUse.Variable);
 #if NET6_0_OR_GREATER
                         Runic.AST.Type.StructOrUnion? previousType = variable.Type as Runic.AST.Type.StructOrUnion;
+                        Runic.AST.Type.Pointer? pointerType;
 #else
                         Runic.AST.Type.StructOrUnion previousType = variable.Type as Runic.AST.Type.StructOrUnion;
+                        Runic.AST.Type.Pointer pointerType;
 #endif
+                        if (previousType == null)
+                        {
+                            // This means we are accessing a member via a pointer dereference (-> operator)
+                           pointerType = variable.Type as Runic.AST.Type.Pointer;
+                            if (pointerType != null) { previousType = pointerType.TargetType as Runic.AST.Type.StructOrUnion; }
+                        }
+
                         for (int n = 0; n < memberUse.Fields.Length; n++)
                         {
                             if (previousType == null)
@@ -159,6 +168,12 @@ namespace Runic.C
                             {
                                 fields[n] = previousType.Fields[memberUse.Fields[n].Index];
                                 previousType = fields[n].Type as Runic.AST.Type.StructOrUnion;
+                                if (previousType == null)
+                                {
+                                    // This means we are accessing a member via a pointer dereference (-> operator)
+                                    pointerType = variable.Type as Runic.AST.Type.Pointer;
+                                    if (pointerType != null) { previousType = pointerType.TargetType as Runic.AST.Type.StructOrUnion; }
+                                }
                             }
                         }
                         return new Runic.AST.Node.Expression.MemberUse(variable, fields);
