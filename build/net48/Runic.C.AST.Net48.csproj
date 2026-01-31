@@ -32,10 +32,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Runic.AST, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Runic.AST.1.0.6\lib\net48\Runic.AST.dll</HintPath>
+      <HintPath>..\..\packages\Runic.AST.1.0.8\lib\net48\Runic.AST.dll</HintPath>
     </Reference>
     <Reference Include="Runic.C.Parser, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Runic.C.Parser.1.0.5\lib\net48\Runic.C.Parser.dll</HintPath>
+      <HintPath>..\..\packages\Runic.C.Parser.1.0.6\lib\net48\Runic.C.Parser.dll</HintPath>
     </Reference>
     <Reference Include="Runic.Token, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Runic.Token.1.0.1\lib\net48\Runic.Token.dll</HintPath>

@@ -103,6 +103,7 @@ namespace Runic.C
 
         static Runic.AST.Type.Void _voidType = new Runic.AST.Type.Void();
 
+        Dictionary<string, CStruct> _structs = new Dictionary<string, CStruct>();
         internal Runic.AST.Type GetType(Parser.Type type)
         {
             switch (type)
@@ -136,14 +137,14 @@ namespace Runic.C
                     }
                 case Parser.Type.StructOrUnion structOrUnion:
                     {
-                        if (structOrUnion.Union)
+                        if (structOrUnion.Name == null) { return CStruct.Create(this, structOrUnion); }
+                        CStruct astStruct; 
+                        if (!_structs.TryGetValue(structOrUnion.Name.Value, out astStruct))
                         {
-                            return CStruct.Create(this, structOrUnion);
+                            astStruct = CStruct.Create(this, structOrUnion);
+                            _structs.Add(structOrUnion.Name.Value, astStruct);
                         }
-                        else
-                        {
-                            return CStruct.Create(this, structOrUnion);
-                        }
+                        return astStruct;
                     }
                     break;
 

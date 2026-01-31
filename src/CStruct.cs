@@ -41,7 +41,11 @@ namespace Runic.C
                 }
                 return size;
             }
-            CStruct(Field[] fields) : base(fields)
+#if NET6_0_OR_GREATER
+            CStruct(Field[] fields, string? name) : base(fields, name)
+#else
+            CStruct(Field[] fields, string name) : base(fields, name)
+#endif
             {
             }
             public static CStruct Create(AST parent, Parser.Type.StructOrUnion src)
@@ -49,9 +53,10 @@ namespace Runic.C
                 Field[] fields = new Field[src.Fields.Length];
                 for (int n = 0; n < src.Fields.Length; n++)
                 {
-                    fields[n] = new Field(parent.GetType(src.Fields[n].Type));
+                    Runic.C.Parser.Field field = src.Fields[n];
+                    fields[n] = new Field(parent.GetType(field.Type), field.Name == null ? null : src.Name.Value);
                 }
-                return new CStruct(fields);
+                return new CStruct(fields, src.Name == null ? null : src.Name.Value);
             }
         }
     }

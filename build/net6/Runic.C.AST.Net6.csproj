@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -25,7 +25,7 @@
     <Compile Include="..\..\src\While.cs" Link="While.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Runic.AST" Version="1.0.6" />
-    <PackageReference Include="Runic.C.Parser" Version="1.0.5" />
+    <PackageReference Include="Runic.AST" Version="1.0.8" />
+    <PackageReference Include="Runic.C.Parser" Version="1.0.6" />
   </ItemGroup>
 </Project>
